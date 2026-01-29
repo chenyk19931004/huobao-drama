@@ -35,11 +35,13 @@ func main() {
 	}
 	logr.Info("Database connected successfully")
 
-	// 自动迁移数据库表结构
+	// 自动迁移数据库表结构（仅创建/更新，不会删除已有的列或索引）
 	if err := database.AutoMigrate(db); err != nil {
-		logr.Fatal("Failed to migrate database", "error", err)
+		// 迁移错误只警告，不中断程序（表结构可能已存在）
+		logr.Warn("Database migration warning (may be ignorable)", "error", err)
+	} else {
+		logr.Info("Database tables migrated successfully")
 	}
-	logr.Info("Database tables migrated successfully")
 
 	// 初始化本地存储
 	var localStorage *storage.LocalStorage

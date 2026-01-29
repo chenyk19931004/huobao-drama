@@ -492,6 +492,15 @@ func (s *ImageGenerationService) getImageClient(provider string) (image.ImageCli
 	case "gemini", "google":
 		endpoint = "/v1beta/models/{model}:generateContent"
 		return image.NewGeminiImageClient(config.BaseURL, config.APIKey, model, endpoint), nil
+	case "huixing", "huixingyun":
+		// 汇星云文生图接口 - Endpoint 和 QueryEndpoint 分别对应生成和查询接口
+		generateEndpoint := config.BaseURL
+		queryEndpoint = config.Endpoint // 使用Endpoint字段存储查询接口地址
+		port := config.Model[0]         // 使用第一个model字段存储port
+		if len(config.Model) == 0 {
+			port = "8188"
+		}
+		return image.NewHuixingImageClient(generateEndpoint, queryEndpoint, port), nil
 	default:
 		endpoint = "/images/generations"
 		return image.NewOpenAIImageClient(config.BaseURL, config.APIKey, model, endpoint), nil
@@ -550,6 +559,18 @@ func (s *ImageGenerationService) getImageClientWithModel(provider string, modelN
 	case "gemini", "google":
 		endpoint = "/v1beta/models/{model}:generateContent"
 		return image.NewGeminiImageClient(config.BaseURL, config.APIKey, model, endpoint), nil
+	case "huixing", "huixingyun":
+		// 汇星云文生图接口 - Endpoint 和 QueryEndpoint 分别对应生成和查询接口
+		generateEndpoint := config.BaseURL
+		queryEndpoint = config.Endpoint // 使用Endpoint字段存储查询接口地址
+		port := model                   // 使用model参数或配置中的model作为port
+		if port == "" && len(config.Model) > 0 {
+			port = config.Model[0]
+		}
+		if port == "" {
+			port = "8188"
+		}
+		return image.NewHuixingImageClient(generateEndpoint, queryEndpoint, port), nil
 	default:
 		endpoint = "/images/generations"
 		return image.NewOpenAIImageClient(config.BaseURL, config.APIKey, model, endpoint), nil

@@ -26,6 +26,8 @@ func NewDatabase(cfg config.DatabaseConfig) (*gorm.DB, error) {
 
 	gormConfig := &gorm.Config{
 		Logger: NewCustomLogger(),
+		// 禁用外键约束检查，避免迁移时的顺序依赖问题
+		DisableForeignKeyConstraintWhenMigrating: true,
 	}
 
 	var db *gorm.DB

@@ -319,7 +319,7 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
     {
       id: "openai",
       name: "OpenAI",
-      models: ["gpt-5.2", "gemini-3-flash-preview"],
+      models: ["gpt-5.2", "gemini-3-flash-preview","qwen3-max"],
     },
     {
       id: "chatfire",
@@ -352,7 +352,13 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
       name: "Google Gemini",
       models: ["gemini-3-pro-image-preview"],
     },
-    { id: "openai", name: "OpenAI", models: ["dall-e-3", "dall-e-2"] },
+    { id: "openai", name: "OpenAI", models: ["dall-e-3", "dall-e-2",'qwen-image-max'] },
+
+    {
+          id: 'huixing',
+          name: '汇星云',
+          models: ['8188', '8189']  // ComfyUI 端口
+        }
   ],
   video: [
     {
@@ -496,6 +502,7 @@ const generateConfigName = (
     openai: "OpenAI",
     gemini: "Gemini",
     google: "Google",
+    huixing: "汇星云"
   };
 
   const serviceNames: Record<AIServiceType, string> = {
@@ -666,6 +673,9 @@ const handleProviderChange = () => {
     form.base_url = "https://ark.cn-beijing.volces.com/api/v3";
   } else if (form.provider === "openai") {
     form.base_url = "https://api.openai.com/v1";
+   } else if (form.provider === 'huixing') {
+      // 汇星云文生图接口
+   form.base_url = "http://azj1.dc.huixingyun.com:55875/webhook/72874db5-0e24-44cb-8f2c-7fa60435e652"
   } else {
     // chatfire 和其他厂商
     form.base_url = "https://api.chatfire.site/v1";

@@ -263,6 +263,14 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
       models: ["gemini-3-pro-image-preview"],
     },
     { id: "openai", name: "OpenAI", models: ["dall-e-3", "dall-e-2"] },
+  {
+        id: 'huixing',
+        name: '汇星云',
+        models: [
+          '8188',  // ComfyUI 默认端口
+          '8189',
+        ]
+      }
   ],
   video: [
     {
@@ -412,12 +420,15 @@ const generateConfigName = (
   serviceType: AIServiceType,
 ): string => {
   const providerNames: Record<string, string> = {
-    chatfire: "ChatFire",
-    openai: "OpenAI",
-    gemini: "Gemini",
-    google: "Google",
-  };
-
+    'chatfire': 'ChatFire',
+    'openai': 'OpenAI',
+    'gemini': 'Gemini',
+    'google': 'Google',
+    'volcengine': '火山引擎',
+    'volces': '火山引擎',
+    'huixing': '汇星云'
+  }
+  
   const serviceNames: Record<AIServiceType, string> = {
     text: "文本",
     image: "图片",
@@ -578,8 +589,11 @@ const handleProviderChange = () => {
   form.model = [];
 
   // 根据厂商自动设置默认 base_url
-  if (form.provider === "gemini" || form.provider === "google") {
-    form.base_url = "https://api.chatfire.site";
+  if (form.provider === 'gemini' || form.provider === 'google') {
+    form.base_url = 'https://api.chatfire.site'
+  } else if (form.provider === 'huixing') {
+    // 汇星云文生图接口
+    form.base_url = 'http://azj1.dc.huixingyun.com:55875/webhook/72874db5-0e24-44cb-8f2c-7fa60435e652'
   } else {
     // openai, chatfire 等其他厂商
     form.base_url = "https://api.chatfire.site/v1";
